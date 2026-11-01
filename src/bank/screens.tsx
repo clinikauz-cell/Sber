@@ -5,6 +5,7 @@ import {
   filteredTxs,
   formatRub,
   groupOf,
+  maskCard,
   parseAmount,
   SERVICES,
   shownMoney,
@@ -375,7 +376,7 @@ export function TxScreen({ tx }: { tx: Tx }) {
             <div className={tx.amount > 0 ? "pay-figure in" : "pay-figure"}>
               {s.hidden ? "•••• ₽" : amt}
             </div>
-            <div style={{ marginTop: 6, fontWeight: 700 }}>{tx.title}</div>
+            <div style={{ marginTop: 6, fontWeight: 700 }}>{maskCard(tx.title)}</div>
             {tx.place ? <div className="muted">{tx.place}</div> : null}
             <div className="muted" style={{ marginTop: 4 }}>{tx.category}</div>
           </div>

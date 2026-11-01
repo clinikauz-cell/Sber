@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import {
   daySpent,
   formatRub,
+  maskCard,
   shownMoney,
   txAmount,
   type SheetId,
@@ -238,7 +239,7 @@ export function TxRow({
         )}
       </div>
       <div className="tx-main">
-        <div className="tx-title">{tx.title}</div>
+        <div className="tx-title">{maskCard(tx.title)}</div>
         {tx.place ? <div className="tx-place">{tx.place}</div> : null}
         <div className="tx-sub">{tx.category}</div>
         {tx.accountAfter !== undefined ? (

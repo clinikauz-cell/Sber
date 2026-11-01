@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-const ACCESS_CODE = "20260";
-const GATE_KEY = "vesta-gate-2";
-const FAIL_KEY = "vesta-gate-fails-2";
+const ACCESS_CODE = "00800";
+const GATE_KEY = "vesta-gate-3";
+const FAIL_KEY = "vesta-gate-fails-3";
 
-const GATE_ON = false;
+const GATE_ON = true;
 
 export function useAccess() {
   const [open, setOpen] = useState<boolean | null>(GATE_ON ? null : true);

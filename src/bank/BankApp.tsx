@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { KEY, snapshot, useBank, useFrame } from "./model";
+import { loadWallet, saveWallet } from "./sync.server";
 import {
   BonusesScreen,
   CardScreen,
@@ -39,17 +40,78 @@ export function BankApp() {
   const access = useAccess();
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) useBank.getState().hydrate(JSON.parse(raw));
-    } catch {
-      /* ignore broken snapshot */
-    }
-    useBank.getState().markReady();
-    return useBank.subscribe((state) => {
-      if (!state.ready) return;
-      localStorage.setItem(KEY, JSON.stringify(snapshot(state)));
+    let stop = false;
+    let applying = false;
+    let seen = 0;
+    let timer = 0;
+
+    const pull = async () => {
+      const remote = await loadWallet();
+      if (stop || !remote || remote.updatedAt === seen) return;
+      applying = true;
+      useBank.getState().hydrate(remote.payload);
+      applying = false;
+      seen = remote.updatedAt;
+      localStorage.setItem(KEY, JSON.stringify(snapshot(useBank.getState())));
+    };
+
+    const push = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        const state = useBank.getState();
+        if (!state.ready || applying) return;
+        const body = snapshot(state);
+        localStorage.setItem(KEY, JSON.stringify(body));
+        void saveWallet({ data: body }).then((saved) => {
+          if (saved?.updatedAt) seen = saved.updatedAt;
+        });
+      }, 300);
+    };
+
+    void (async () => {
+      try {
+        const remote = await loadWallet();
+        if (stop) return;
+        if (remote) {
+          applying = true;
+          useBank.getState().hydrate(remote.payload);
+          applying = false;
+          seen = remote.updatedAt;
+        } else {
+          try {
+            const raw = localStorage.getItem(KEY);
+            if (raw) useBank.getState().hydrate(JSON.parse(raw));
+          } catch {
+            /* ignore broken snapshot */
+          }
+          const saved = await saveWallet({ data: snapshot(useBank.getState()) });
+          if (saved?.updatedAt) seen = saved.updatedAt;
+        }
+      } catch {
+        try {
+          const raw = localStorage.getItem(KEY);
+          if (raw) useBank.getState().hydrate(JSON.parse(raw));
+        } catch {
+          /* stay on defaults */
+        }
+      }
+      if (!stop) useBank.getState().markReady();
+    })();
+
+    const unsub = useBank.subscribe((state) => {
+      if (!state.ready || applying) return;
+      push();
     });
+    const poll = window.setInterval(() => {
+      void pull();
+    }, 2500);
+
+    return () => {
+      stop = true;
+      unsub();
+      window.clearTimeout(timer);
+      window.clearInterval(poll);
+    };
   }, []);
 
   useEffect(() => {

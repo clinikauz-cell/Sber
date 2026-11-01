@@ -190,6 +190,12 @@ export function shownMoney(n: number, hide: boolean, signed = false): string {
   return formatRub(n, signed);
 }
 
+export function maskCard(value: string): string {
+  const compact = value.replace(/[\s-]/g, "");
+  if (!/^\d{12,19}$/.test(compact)) return value;
+  return `**** ${compact.slice(-4)}`;
+}
+
 export function txAmount(tx: Tx, hide: boolean): { text: string; incoming: boolean } {
   const incoming = tx.amount > 0;
   if (hide) return { text: "••••\u00a0₽", incoming };
@@ -434,7 +440,7 @@ export const useBank = create<BankState>((set, get) => ({
     const tx: Tx = {
       id: `t-${Date.now()}`,
       group: "Сегодня",
-      title: to,
+      title: maskCard(to),
       category,
       amount: -amount,
       fee,
@@ -450,7 +456,7 @@ export const useBank = create<BankState>((set, get) => ({
       card: next,
       bonuses: s.bonuses + Math.max(1, Math.floor(amount / 500)),
       txs: [tx, ...s.txs],
-      receipt: { title: to, amount, fee, when: nowLabel() },
+      receipt: { title: maskCard(to), amount, fee, when: nowLabel() },
       draftAmount: "",
       draftNote: "",
       stack: [...s.stack, { screen: "success" }],
