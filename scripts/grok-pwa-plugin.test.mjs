@@ -508,11 +508,19 @@ test("escapes host-derived values in the install page", () => {
   assert.equal(html.includes("<script>alert(1)</script>"), false);
 });
 
-test("renders the manifest with the per-app name", () => {
-  const manifest = JSON.parse(renderWebManifest("wild-race.grok.me"));
-  assert.equal(manifest.name, "Wild Race");
-  assert.equal(manifest.short_name, "Wild Race");
-  assert.equal(manifest.icons[0].src, "/__grok/icon-180.png");
+test("renders the manifest with the Vesta name and install icons", () => {
+  const manifest = JSON.parse(renderWebManifest("sber-gamma.vercel.app"));
+  assert.equal(manifest.name, "Веста");
+  assert.equal(manifest.short_name, "Веста");
+  assert.equal(manifest.display, "standalone");
+  assert.equal(manifest.start_url, "/");
+  assert.equal(manifest.theme_color, "#c9f0e0");
+  const icons = manifest.icons.map((icon) => `${icon.sizes}:${icon.purpose}:${icon.src}`);
+  assert.ok(icons.includes("192x192:any:/__grok/icon-192.png"));
+  assert.ok(icons.includes("512x512:any:/__grok/icon-512.png"));
+  assert.ok(icons.includes("192x192:maskable:/__grok/icon-maskable-192.png"));
+  assert.ok(icons.includes("512x512:maskable:/__grok/icon-maskable-512.png"));
+  assert.ok(icons.includes("180x180:any:/__grok/icon-180.png"));
 });
 
 // Tripwires: the deployed-app path only works if Nitro scans server/ — an

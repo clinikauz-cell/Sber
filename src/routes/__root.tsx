@@ -16,6 +16,8 @@ export const Route = createRootRoute({
       { title: APP_NAME },
       { name: "description", content: "Веста — кошелёк, переводы и история операций." },
       { name: "theme-color", content: "#c9f0e0" },
+      { name: "apple-mobile-web-app-title", content: APP_NAME },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
