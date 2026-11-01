@@ -459,6 +459,9 @@ export function CardScreen() {
               <div style={{ opacity: 0.8 }}>Счёт •• 8423</div>
             </div>
           </div>
+          <button className="topup-btn" onClick={() => s.setSheet("topup")}>
+            Пополнить
+          </button>
           <div className="svc-grid" style={{ marginTop: 12 }}>
             <button className="svc" onClick={() => s.push({ screen: "transfer" })}>
               <span className="svc-ico"><Ico name="up" size={18} /></span>
@@ -1020,6 +1023,9 @@ export function ServiceScreen({ service }: { service: string }) {
 
 export function SavingsScreen() {
   const s = useBank();
+  const [open, setOpen] = useState(false);
+  const [amount, setAmount] = useState("100");
+  const n = parseAmount(amount);
   const account = 407.61 + s.savings;
   const total = 525.3 + s.savings;
   return (
@@ -1053,7 +1059,7 @@ export function SavingsScreen() {
         <div className="sv">
           <div className="sv-label">Всего средств</div>
           <div className="sv-row">
-            <button className="sv-sum">
+            <button className="sv-sum" onClick={() => setOpen((v) => !v)}>
               {shownMoney(total, s.hidden)}
               <Ico name="chev" size={16} />
             </button>
@@ -1074,15 +1080,31 @@ export function SavingsScreen() {
             </div>
             <div className="sv-box">
               <div>Пополните счёт и получайте доход</div>
+              <button className="sv-link" onClick={() => setOpen(true)}>Пополнить</button>
             </div>
           </div>
+
+          {open ? (
+            <div className="sv-topup">
+              <input inputMode="decimal" aria-label="Сумма" value={amount} onChange={(e) => setAmount(e.target.value)} />
+              <button
+                disabled={n <= 0 || n > s.wallet}
+                onClick={() => {
+                  s.moveSavings("in", n);
+                  setOpen(false);
+                }}
+              >
+                Перевести
+              </button>
+            </div>
+          ) : null}
 
           <section className="sv-card">
             <div className="sv-head">
               <h2>Вклады и счета</h2>
-              <button aria-label="Открыть">+</button>
+              <button aria-label="Открыть" onClick={() => setOpen(true)}>+</button>
             </div>
-            <button className="sv-acc">
+            <button className="sv-acc" onClick={() => setOpen(true)}>
               <span className="sv-acc-ico" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 24 24">
                   <rect x="4" y="8" width="16" height="11" rx="2" fill="none" stroke="#fff" strokeWidth="1.6" />
@@ -1284,6 +1306,7 @@ export function MoreSheet() {
   const s = useBank();
   return (
     <Sheet title="Ещё" onClose={() => s.setSheet(null)}>
+      <button className="choice" onClick={() => s.setSheet("topup")}>Пополнить карту</button>
       <button className="choice" onClick={() => { s.setSheet(null); s.push({ screen: "requisites" }); }}>Реквизиты счёта</button>
       <button className="choice" onClick={() => { s.setSheet(null); s.push({ screen: "history" }); }}>Выписка</button>
       <button className="choice" onClick={() => { s.setSheet(null); s.toggleHidden(); }}>Скрыть баланс</button>
@@ -1292,8 +1315,40 @@ export function MoreSheet() {
   );
 }
 
+function TopUpSheet() {
+  const s = useBank();
+  const [amount, setAmount] = useState("");
+  const n = parseAmount(amount);
+  return (
+    <Sheet title="Пополнить карту" onClose={() => s.setSheet(null)}>
+      <p className="topup-hint">Счёт •• 8423 · карта •• 2899</p>
+      <div className="sv-topup">
+        <input
+          inputMode="decimal"
+          aria-label="Сумма"
+          placeholder="Сумма, ₽"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <button
+          disabled={n <= 0}
+          onClick={() => {
+            s.topUp(n);
+            s.setSheet(null);
+          }}
+        >
+          Пополнить
+        </button>
+      </div>
+    </Sheet>
+  );
+}
+
 export function FilterSheets() {
   const s = useBank();
+  if (s.sheet === "topup") {
+    return <TopUpSheet />;
+  }
   if (s.sheet === "kind") {
     return (
       <Sheet title="Что показывать" onClose={() => s.setSheet(null)}>

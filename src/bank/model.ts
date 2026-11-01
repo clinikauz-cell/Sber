@@ -23,7 +23,7 @@ export type ScreenId =
 export type PayMode = "internal" | "sbp" | "card";
 export type KindFilter = "all" | "in" | "out";
 export type PeriodFilter = "all" | "today" | "month";
-export type SheetId = null | "more" | "kind" | "period" | "account" | "contacts";
+export type SheetId = null | "more" | "kind" | "period" | "account" | "contacts" | "topup";
 
 export type TxIcon = "arrow" | "tbank";
 
@@ -315,6 +315,7 @@ export type BankState = {
   claimPromo: () => void;
   moveSavings: (dir: "in" | "out", amount: number) => void;
   payService: (title: string, amount: number) => "ok" | "short" | "invalid";
+  topUp: (amount: number) => void;
   sendChat: (text: string) => void;
   showToast: (toast: string) => void;
   reset: () => void;
@@ -552,6 +553,31 @@ export const useBank = create<BankState>((set, get) => ({
       stack: [...s.stack, { screen: "success" }],
     });
     return "ok";
+  },
+  topUp: (amount) => {
+    const s = get();
+    if (amount <= 0 || s.frozen) {
+      if (s.frozen) set({ toast: "Карта заморожена" });
+      return;
+    }
+    const next = round2(s.wallet + amount);
+    const tx: Tx = {
+      id: `in-${Date.now()}`,
+      group: "Сегодня",
+      title: "Пополнение карты",
+      category: "Сегодня · Зачисление",
+      amount,
+      accountAfter: next,
+      status: "ok",
+      icon: "arrow",
+      kind: "incoming",
+    };
+    set({
+      wallet: next,
+      card: next,
+      txs: [tx, ...s.txs],
+      toast: `Зачислено ${formatRub(amount)}`,
+    });
   },
   sendChat: (text) => {
     const trimmed = text.trim();
