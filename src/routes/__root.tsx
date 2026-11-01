@@ -1,9 +1,9 @@
-import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+toimport { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "Веста";
+const APP_NAME = "Сбер";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -14,7 +14,7 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1, viewport-fit=cover",
       },
       { title: APP_NAME },
-      { name: "description", content: "Веста — кошелёк, переводы и история операций." },
+      { name: "description", content: "Сбер — кошелёк, переводы и история операций." },
       { name: "theme-color", content: "#c9f0e0" },
     ],
     links: [
