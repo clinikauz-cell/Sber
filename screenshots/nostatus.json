@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Веста",
+      "hasCanvas": false,
+      "bodyTextLen": 313,
+      "bodyTextHash": "17c61b62af099fab4848aac7bcbaf9be16f4cb7a6ec87d3d803a9fe8cd77af7a",
+      "bodyTextPrefix": "ВестаЧат В кошельке 117,69 ₽ 2899 107,42 ₽ Счёт •• 8423 3 ВестаБ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/nostatus.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Веста",
+      "hasCanvas": false,
+      "bodyTextLen": 313,
+      "bodyTextHash": "17c61b62af099fab4848aac7bcbaf9be16f4cb7a6ec87d3d803a9fe8cd77af7a",
+      "bodyTextPrefix": "ВестаЧат В кошельке 117,69 ₽ 2899 107,42 ₽ Счёт •• 8423 3 ВестаБ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/nostatus-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/nostatus.json"
+}

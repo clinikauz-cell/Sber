@@ -1,0 +1,41 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Веста",
+      "hasCanvas": false,
+      "bodyTextLen": 319,
+      "bodyTextHash": "187af626a44a59a071c7a02c8653bbd65e8c0dbe514ad63087eb0d68c39943bb",
+      "bodyTextPrefix": "14:33 ВестаЧат В кошельке 117,69 ₽ 2899 107,42 ₽ Счёт •• 8423 3 ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Веста",
+      "hasCanvas": false,
+      "bodyTextLen": 319,
+      "bodyTextHash": "187af626a44a59a071c7a02c8653bbd65e8c0dbe514ad63087eb0d68c39943bb",
+      "bodyTextPrefix": "14:33 ВестаЧат В кошельке 117,69 ₽ 2899 107,42 ₽ Счёт •• 8423 3 ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": true,
+  "baselineReasons": [
+    "desktop: body text replaced (similar length, page start changed)",
+    "mobile: body text replaced (similar length, page start changed)"
+  ]
+}
