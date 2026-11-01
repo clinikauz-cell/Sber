@@ -1020,9 +1020,6 @@ export function ServiceScreen({ service }: { service: string }) {
 
 export function SavingsScreen() {
   const s = useBank();
-  const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState("100");
-  const n = parseAmount(amount);
   const account = 407.61 + s.savings;
   const total = 525.3 + s.savings;
   return (
@@ -1056,7 +1053,7 @@ export function SavingsScreen() {
         <div className="sv">
           <div className="sv-label">Всего средств</div>
           <div className="sv-row">
-            <button className="sv-sum" onClick={() => setOpen((v) => !v)}>
+            <button className="sv-sum">
               {shownMoney(total, s.hidden)}
               <Ico name="chev" size={16} />
             </button>
@@ -1077,31 +1074,15 @@ export function SavingsScreen() {
             </div>
             <div className="sv-box">
               <div>Пополните счёт и получайте доход</div>
-              <button className="sv-link" onClick={() => setOpen(true)}>Пополнить</button>
             </div>
           </div>
-
-          {open ? (
-            <div className="sv-topup">
-              <input inputMode="decimal" aria-label="Сумма" value={amount} onChange={(e) => setAmount(e.target.value)} />
-              <button
-                disabled={n <= 0 || n > s.wallet}
-                onClick={() => {
-                  s.moveSavings("in", n);
-                  setOpen(false);
-                }}
-              >
-                Перевести
-              </button>
-            </div>
-          ) : null}
 
           <section className="sv-card">
             <div className="sv-head">
               <h2>Вклады и счета</h2>
-              <button aria-label="Открыть" onClick={() => setOpen(true)}>+</button>
+              <button aria-label="Открыть">+</button>
             </div>
-            <button className="sv-acc" onClick={() => setOpen(true)}>
+            <button className="sv-acc">
               <span className="sv-acc-ico" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 24 24">
                   <rect x="4" y="8" width="16" height="11" rx="2" fill="none" stroke="#fff" strokeWidth="1.6" />

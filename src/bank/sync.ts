@@ -30,7 +30,7 @@ export const loadWallet = createServerFn({ method: "GET" }).handler(async () => 
 });
 
 export const saveWallet = createServerFn({ method: "POST" })
-  .validator((data: unknown) => data)
+  .inputValidator((data: unknown) => data)
   .handler(async ({ data }) => {
     const sql = await sqlClient();
     const now = Date.now();

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { KEY, snapshot, useBank, useFrame } from "./model";
-import { loadWallet, saveWallet } from "./sync.functions";
+import { loadWallet, saveWallet } from "./sync";
 import {
   BonusesScreen,
   CardScreen,
@@ -148,7 +148,7 @@ export function BankApp() {
   return (
     <div className={night ? "stage night-stage" : "stage"}>
       <div className={night ? "device night" : "device"} data-pane={frame.screen} data-tone={dark ? "dark" : "light"} data-tabs={showTabs ? "on" : "off"}>
-        {access.open === null ? null : access.open ? (
+        {access.open ? (
           body
         ) : (
           <AccessScreen onUnlock={access.unlock} />

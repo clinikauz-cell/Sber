@@ -7,10 +7,10 @@ const FAIL_KEY = "vesta-gate-fails-3";
 const GATE_ON = true;
 
 export function useAccess() {
-  const [open, setOpen] = useState<boolean | null>(GATE_ON ? null : true);
+  const [open, setOpen] = useState(GATE_ON ? false : true);
   useEffect(() => {
     if (!GATE_ON) return;
-    setOpen(sessionStorage.getItem(GATE_KEY) === "1");
+    if (sessionStorage.getItem(GATE_KEY) === "1") setOpen(true);
   }, []);
   return { open, unlock: () => setOpen(true) };
 }
