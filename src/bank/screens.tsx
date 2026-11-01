@@ -117,7 +117,7 @@ export function HomeScreen() {
             <span className="mark">C</span>
             <div className="w-spacer" />
             <div className="bonus-num">{s.hidden ? "•" : s.bonuses}</div>
-            <div className="bonus-name">ВестаБонус</div>
+            <div className="bonus-name">СберБонус</div>
           </button>
         </div>
 
