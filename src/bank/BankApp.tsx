@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { KEY, snapshot, useBank, useFrame } from "./model";
-import { loadWallet, saveWallet } from "./sync.server";
+import { loadWallet, saveWallet } from "./sync.functions";
 import {
   BonusesScreen,
   CardScreen,
