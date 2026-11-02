@@ -731,7 +731,7 @@ function PayDock() {
           <section className="pay-card">
             <h2>Переводы</h2>
             <button className="pay-search" onClick={() => s.push({ screen: "transfer" })}>
-              <span>В Весту или в другой банк</span>
+              <span>В Сбер или в другой банк</span>
               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M7 7h9M14 4l3 3-3 3M17 17H8M10 14l-3 3 3 3" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -928,7 +928,7 @@ export function PaymentsScreen() {
           <section className="pj-card">
             <h2>Перевести</h2>
             <button className="pj-transfer" onClick={() => { s.setDraft({ draftTo: "" }); s.push({ screen: "transfer" }); }}>
-              <span>В Весту или в другой банк</span>
+              <span>В Сбер или в другой банк</span>
               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M7 7h9M14 4l3 3-3 3M17 17H8M10 14l-3 3 3 3" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
