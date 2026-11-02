@@ -158,7 +158,7 @@ export function renderInstallPageHtml(template, { host, url } = {}) {
 }
 
 /** Installed-app name. Host slugs stay "Grok App" on *.vercel.app, so this app does not use them. */
-const PWA_NAME = "Сбер";
+const PWA_NAME = "Веста";
 /** Matches `--color` theme and the document theme-color in src/routes/__root.tsx. */
 const PWA_THEME_COLOR = "#c9f0e0";
 

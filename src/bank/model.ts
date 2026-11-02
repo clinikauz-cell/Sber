@@ -23,11 +23,11 @@ export type ScreenId =
 export type PayMode = "internal" | "sbp" | "card";
 export type KindFilter = "all" | "in" | "out";
 export type PeriodFilter = "all" | "today" | "month";
-export type SheetId = null | "more" | "kind" | "period" | "account" | "contacts" | "topup";
+export type SheetId = null | "more" | "kind" | "period" | "account" | "contacts";
 
 export type TxIcon = "arrow" | "tbank";
 
-export type Tx = {mini
+export type Tx = {
   id: string;
   group: string;
   title: string;
@@ -86,7 +86,7 @@ export const INITIAL_TXS: Tx[] = [
     id: "said",
     group: "11 сентября, пт",
     title: "Саид Исломбек У.",
-    category: "Клиенту Сбер",
+    category: "Клиенту Весты",
     amount: -3000,
     accountAfter: 59205.9,
     status: "ok",
@@ -143,7 +143,7 @@ export const INITIAL_TXS: Tx[] = [
     id: "aziz",
     group: "28 октября, ср",
     title: "Азизбек Равшанбек Угли А.",
-    category: "Клиенту Сбер",
+    category: "Клиенту Весты",
     amount: -30000,
     fee: 0,
     status: "ok",
@@ -266,7 +266,7 @@ const seedChats: ChatMsg[] = [
   {
     id: "hi",
     from: "bot",
-    text: "Я СберЧат. Подскажу баланс, бонусы и как перевести — платежи остаются внутри приложения.",
+    text: "Я ВестаЧат. Подскажу баланс, бонусы и как перевести — платежи остаются внутри приложения.",
   },
 ];
 
@@ -315,7 +315,6 @@ export type BankState = {
   claimPromo: () => void;
   moveSavings: (dir: "in" | "out", amount: number) => void;
   payService: (title: string, amount: number) => "ok" | "short" | "invalid";
-  topUp: (amount: number) => void;
   sendChat: (text: string) => void;
   showToast: (toast: string) => void;
   reset: () => void;
@@ -437,7 +436,7 @@ export const useBank = create<BankState>((set, get) => ({
     const fee = feeFor(s.mode, amount);
     if (round2(amount + fee) > s.wallet) return "short";
     const category =
-      s.mode === "sbp" ? "Перевод по СБП" : s.mode === "card" ? "Перевод по номеру карты" : "Клиенту Сбер";
+      s.mode === "sbp" ? "Перевод по СБП" : s.mode === "card" ? "Перевод по номеру карты" : "Клиенту Весты";
     const tx: Tx = {
       id: `t-${Date.now()}`,
       group: "Сегодня",
@@ -554,31 +553,6 @@ export const useBank = create<BankState>((set, get) => ({
     });
     return "ok";
   },
-  topUp: (amount) => {
-    const s = get();
-    if (amount <= 0 || s.frozen) {
-      if (s.frozen) set({ toast: "Карта заморожена" });
-      return;
-    }
-    const next = round2(s.wallet + amount);
-    const tx: Tx = {
-      id: `in-${Date.now()}`,
-      group: "Сегодня",
-      title: "Пополнение карты",
-      category: "Сегодня · Зачисление",
-      amount,
-      accountAfter: next,
-      status: "ok",
-      icon: "arrow",
-      kind: "incoming",
-    };
-    set({
-      wallet: next,
-      card: next,
-      txs: [tx, ...s.txs],
-      toast: `Зачислено ${formatRub(amount)}`,
-    });
-  },
   sendChat: (text) => {
     const trimmed = text.trim();
     if (!trimmed) return;
@@ -589,9 +563,9 @@ export const useBank = create<BankState>((set, get) => ({
     if (q.includes("баланс") || q.includes("кошел")) {
       answer = `В кошельке ${formatRub(s.wallet)}. На карте •• 2899 — ${formatRub(s.card)}.`;
     } else if (q.includes("бонус")) {
-      answer = `СберБонус: ${s.bonuses}. 1 бонус = 1 ₽ при оплате у партнёров.`;
+      answer = `ВестаБонус: ${s.bonuses}. 1 бонус = 1 ₽ при оплате у партнёров.`;
     } else if (q.includes("перевод") || q.includes("отправ")) {
-      answer = "Платежи → Клиенту Сбер. Комиссия внутри банка 0 ₽, по СБП — 0,28%.";
+      answer = "Платежи → Клиенту Весты. Комиссия внутри банка 0 ₽, по СБП — 0,28%.";
     } else if (q.includes("промо") || q.includes("скид")) {
       answer = "Промокод VESTA300 — скидка 300 ₽ от 800 ₽ на первый заказ в Маркете. Кнопка «Забрать» на главной.";
     } else if (q.includes("карт")) {

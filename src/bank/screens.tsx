@@ -117,7 +117,7 @@ export function HomeScreen() {
             <span className="mark">C</span>
             <div className="w-spacer" />
             <div className="bonus-num">{s.hidden ? "•" : s.bonuses}</div>
-            <div className="bonus-name">СберБонус</div>
+            <div className="bonus-name">ВестаБонус</div>
           </button>
         </div>
 
@@ -426,7 +426,7 @@ export function ReceiptScreen() {
       <div className="scroll">
         <div className="pad">
           <div className="block">
-            <div className="muted">АО «Сбер» · демо</div>
+            <div className="muted">АО «Веста» · демо</div>
             <div className="pay-figure" style={{ marginTop: 8 }}>{r ? formatRub(r.amount) : "—"}</div>
             <div className="row"><span>Получатель</span><small>{r?.title}</small></div>
             <div className="row"><span>Комиссия</span><small>{r ? formatRub(r.fee) : "—"}</small></div>
@@ -450,7 +450,7 @@ export function CardScreen() {
         <div className="pad">
           <div className="hero-card">
             <div className="brandline">
-              <span>Сбер</span>
+              <span>Веста</span>
               <span>{s.frozen ? "Заморожена" : "Дебетовая"}</span>
             </div>
             <div>
@@ -459,9 +459,6 @@ export function CardScreen() {
               <div style={{ opacity: 0.8 }}>Счёт •• 8423</div>
             </div>
           </div>
-          <button className="topup-btn" onClick={() => s.setSheet("topup")}>
-            Пополнить
-          </button>
           <div className="svc-grid" style={{ marginTop: 12 }}>
             <button className="svc" onClick={() => s.push({ screen: "transfer" })}>
               <span className="svc-ico"><Ico name="up" size={18} /></span>
@@ -497,7 +494,7 @@ export function RequisitesScreen() {
   const rows = [
     ["Получатель", "Клиент Весты"],
     ["Счёт", "40817 810 0 0000 0008423"],
-    ["Банк", "АО «Сбер»"],
+    ["Банк", "АО «Веста»"],
     ["БИК", "044525999"],
     ["ИНН", "7700000099"],
     ["К/с", "30101 810 0 0000 0000999"],
@@ -531,7 +528,7 @@ export function BonusesScreen() {
   const hidden = useBank((s) => s.hidden);
   return (
     <div className="screen">
-      <PageHead title="СберБонус" />
+      <PageHead title="ВестаБонус" />
       <div className="scroll">
         <div className="pad">
           <div className="block" style={{ textAlign: "center", padding: 28 }}>
@@ -566,7 +563,7 @@ export function ProfileScreen() {
         <div className="pad">
           <div className="block">
             <button className="row" onClick={() => s.push({ screen: "chat" })}>
-              СберЧат <Ico name="chev" size={18} />
+              ВестаЧат <Ico name="chev" size={18} />
             </button>
             <button className="row" onClick={() => s.push({ screen: "security" })}>
               Безопасность <Ico name="chev" size={18} />
@@ -582,7 +579,7 @@ export function ProfileScreen() {
             </div>
           </div>
           <p className="fine">
-            Сбер — демонстрационный интерфейс. Карты, переводы и бонусы не связаны с реальным банком, деньги не списываются.
+            Веста — демонстрационный интерфейс. Карты, переводы и бонусы не связаны с реальным банком, деньги не списываются.
           </p>
         </div>
       </div>
@@ -636,7 +633,7 @@ export function ChatScreen() {
   };
   return (
     <div className="screen">
-      <PageHead title="СберЧат" />
+      <PageHead title="ВестаЧат" />
       <div className="scroll">
         <div className="chat-log">
           {chats.map((m) => (
@@ -731,7 +728,7 @@ function PayDock() {
           <section className="pay-card">
             <h2>Переводы</h2>
             <button className="pay-search" onClick={() => s.push({ screen: "transfer" })}>
-              <span>В Сбер или в другой банк</span>
+              <span>В Весту или в другой банк</span>
               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M7 7h9M14 4l3 3-3 3M17 17H8M10 14l-3 3 3 3" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -798,7 +795,7 @@ function PayDock() {
                 </span>
               </button>
               <button className="pay-tile map" onClick={() => s.push({ screen: "market" })}>
-                <span>Сбер и партнёры</span>
+                <span>Веста и партнёры</span>
                 <svg className="pay-map" viewBox="0 0 160 110" aria-hidden="true">
                   <path d="M0 28h160M0 62h160M0 92h160M28 0v110M78 0v110M124 0v110" stroke="#8ea0b0" strokeWidth="6" />
                   <path d="M0 46h160M52 0v110" stroke="#c5d0d8" strokeWidth="3" />
@@ -928,7 +925,7 @@ export function PaymentsScreen() {
           <section className="pj-card">
             <h2>Перевести</h2>
             <button className="pj-transfer" onClick={() => { s.setDraft({ draftTo: "" }); s.push({ screen: "transfer" }); }}>
-              <span>В Сбер или в другой банк</span>
+              <span>В Весту или в другой банк</span>
               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M7 7h9M14 4l3 3-3 3M17 17H8M10 14l-3 3 3 3" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -1023,9 +1020,6 @@ export function ServiceScreen({ service }: { service: string }) {
 
 export function SavingsScreen() {
   const s = useBank();
-  const [open, setOpen] = useState(false);
-  const [amount, setAmount] = useState("100");
-  const n = parseAmount(amount);
   const account = 407.61 + s.savings;
   const total = 525.3 + s.savings;
   return (
@@ -1059,7 +1053,7 @@ export function SavingsScreen() {
         <div className="sv">
           <div className="sv-label">Всего средств</div>
           <div className="sv-row">
-            <button className="sv-sum" onClick={() => setOpen((v) => !v)}>
+            <button className="sv-sum">
               {shownMoney(total, s.hidden)}
               <Ico name="chev" size={16} />
             </button>
@@ -1080,31 +1074,15 @@ export function SavingsScreen() {
             </div>
             <div className="sv-box">
               <div>Пополните счёт и получайте доход</div>
-              <button className="sv-link" onClick={() => setOpen(true)}>Пополнить</button>
             </div>
           </div>
-
-          {open ? (
-            <div className="sv-topup">
-              <input inputMode="decimal" aria-label="Сумма" value={amount} onChange={(e) => setAmount(e.target.value)} />
-              <button
-                disabled={n <= 0 || n > s.wallet}
-                onClick={() => {
-                  s.moveSavings("in", n);
-                  setOpen(false);
-                }}
-              >
-                Перевести
-              </button>
-            </div>
-          ) : null}
 
           <section className="sv-card">
             <div className="sv-head">
               <h2>Вклады и счета</h2>
-              <button aria-label="Открыть" onClick={() => setOpen(true)}>+</button>
+              <button aria-label="Открыть">+</button>
             </div>
-            <button className="sv-acc" onClick={() => setOpen(true)}>
+            <button className="sv-acc">
               <span className="sv-acc-ico" aria-hidden="true">
                 <svg width="22" height="22" viewBox="0 0 24 24">
                   <rect x="4" y="8" width="16" height="11" rx="2" fill="none" stroke="#fff" strokeWidth="1.6" />
@@ -1198,7 +1176,7 @@ export function LifeScreen() {
             </button>
             <button className="svc" onClick={() => push({ screen: "bonuses" })}>
               <span className="svc-ico"><Mark size={16} /></span>
-              <b>СберБонус</b>
+              <b>ВестаБонус</b>
               <span>Баллы</span>
             </button>
           </div>
@@ -1306,7 +1284,6 @@ export function MoreSheet() {
   const s = useBank();
   return (
     <Sheet title="Ещё" onClose={() => s.setSheet(null)}>
-      <button className="choice" onClick={() => s.setSheet("topup")}>Пополнить карту</button>
       <button className="choice" onClick={() => { s.setSheet(null); s.push({ screen: "requisites" }); }}>Реквизиты счёта</button>
       <button className="choice" onClick={() => { s.setSheet(null); s.push({ screen: "history" }); }}>Выписка</button>
       <button className="choice" onClick={() => { s.setSheet(null); s.toggleHidden(); }}>Скрыть баланс</button>
@@ -1315,40 +1292,8 @@ export function MoreSheet() {
   );
 }
 
-function TopUpSheet() {
-  const s = useBank();
-  const [amount, setAmount] = useState("");
-  const n = parseAmount(amount);
-  return (
-    <Sheet title="Пополнить карту" onClose={() => s.setSheet(null)}>
-      <p className="topup-hint">Счёт •• 8423 · карта •• 2899</p>
-      <div className="sv-topup">
-        <input
-          inputMode="decimal"
-          aria-label="Сумма"
-          placeholder="Сумма, ₽"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-        <button
-          disabled={n <= 0}
-          onClick={() => {
-            s.topUp(n);
-            s.setSheet(null);
-          }}
-        >
-          Пополнить
-        </button>
-      </div>
-    </Sheet>
-  );
-}
-
 export function FilterSheets() {
   const s = useBank();
-  if (s.sheet === "topup") {
-    return <TopUpSheet />;
-  }
   if (s.sheet === "kind") {
     return (
       <Sheet title="Что показывать" onClose={() => s.setSheet(null)}>

@@ -128,10 +128,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--color-brand
 .sv-box { min-height: 108px; border-radius: 18px; background: rgb(255 255 255 / 0.08); padding: 14px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; font-size: 15px; font-weight: 400; line-height: 1.25; }
 .sv-box b { font-size: 20px; font-weight: 400; }
 .sv-link { color: #21a34a; font-size: 15px; font-weight: 400; text-align: left; }
-.sv-topup { display: flex; gap: 8px; margin-top: 10px; }
-.sv-topup input { flex: 1; height: 44px; border-radius: 12px; background: #1c1e22; color: #fff; border: 0; padding: 0 12px; font-size: 16px; }
-.sv-topup button { height: 44px; padding: 0 14px; border-radius: 12px; background: #21a34a; color: #fff; font-size: 14px; }
-.sv-topup button:disabled { opacity: 0.45; }
 .sv-card { margin-top: 12px; background: #1c1e22; border-radius: 22px; padding: 16px 14px 14px; color: #fff; }
 .sv-card h2, .sv-head h2 { margin: 0; font-size: 20px; font-weight: 400; letter-spacing: -0.02em; }
 .sv-head { display: flex; align-items: center; justify-content: space-between; }
@@ -245,20 +241,6 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--color-brand
 .night .w-card { background: rgb(8 28 24 / 0.28); }
 .mark { font-size: 20px; font-weight: 500; line-height: 1; }
 
-.topup-btn {
-  display: block;
-  width: 100%;
-  margin-top: 12px;
-  height: 40px;
-  border: 0;
-  border-radius: 12px;
-  background: #21a34a;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 400;
-}
-.topup-hint { margin: 0 0 8px; color: #8d8d93; font-size: 13px; }
-
 .night .balance { font-size: 28px; color: #fff; }
 .night .wallet-label,
 .night .card-digits,
@@ -283,3 +265,4 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--color-brand
 .night .tab:not(.on) {
   color: #e8e8ec;
 }
+.night .tx-amt.in { color: #21a34a; }

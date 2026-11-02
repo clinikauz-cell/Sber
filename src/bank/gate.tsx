@@ -64,9 +64,9 @@ export function AccessScreen({ onUnlock }: { onUnlock: () => void }) {
   return (
     <div className="gate">
       <div className="gate-mark" aria-hidden="true">
-        С
+        V
       </div>
-      <div className="gate-title">Сбер</div>
+      <div className="gate-title">Веста</div>
       <p className="gate-sub">{wait > 0 ? `Повторите через ${wait} с` : "Введите код доступа"}</p>
       <div className={shake ? "gate-dots shake" : "gate-dots"} aria-label="Код">
         {Array.from({ length: ACCESS_CODE.length }, (_, i) => (
