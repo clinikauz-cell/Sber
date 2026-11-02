@@ -157,38 +157,24 @@ export function renderInstallPageHtml(template, { host, url } = {}) {
     .replaceAll("{{APP_URL}}", escapeHtml(stripInstallParams(url)));
 }
 
-/** Installed-app name. Host slugs stay "Grok App" on *.vercel.app, so this app does not use them. */
-const PWA_NAME = "Веста";
-/** Matches `--color` theme and the document theme-color in src/routes/__root.tsx. */
-const PWA_THEME_COLOR = "#c9f0e0";
-
-export function renderWebManifest(_hostHeader) {
+export function renderWebManifest(hostHeader) {
+  const name = appNameFromHost(hostHeader);
   return JSON.stringify(
     {
-      name: PWA_NAME,
-      short_name: PWA_NAME,
+      name,
+      short_name: name,
       id: "/",
       start_url: "/",
       scope: "/",
       display: "standalone",
-      background_color: PWA_THEME_COLOR,
-      theme_color: PWA_THEME_COLOR,
+      background_color: "#000000",
+      theme_color: "#000000",
       icons: [
-        { src: "/__grok/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
-        { src: "/__grok/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
         {
-          src: "/__grok/icon-maskable-192.png",
-          sizes: "192x192",
+          src: "/__grok/icon-180.png",
+          sizes: "180x180",
           type: "image/png",
-          purpose: "maskable",
         },
-        {
-          src: "/__grok/icon-maskable-512.png",
-          sizes: "512x512",
-          type: "image/png",
-          purpose: "maskable",
-        },
-        { src: "/__grok/icon-180.png", sizes: "180x180", type: "image/png", purpose: "any" },
       ],
     },
     null,
@@ -198,17 +184,13 @@ export function renderWebManifest(_hostHeader) {
 
 export function grokPwaHeadTags(appName = DEFAULT_APP_NAME) {
   return [
-    // Standalone display comes from the manifest ("display": "standalone").
-    // apple-mobile-web-app-capable is what iOS still reads for Add to Home Screen.
+    // Standalone display comes from the manifest ("display": "standalone");
+    // the legacy *-web-app-capable metas it replaces are deliberately absent.
     ["manifest", '<link rel="manifest" href="/__grok/manifest.webmanifest">'],
     ["apple-touch-icon", '<link rel="apple-touch-icon" href="/__grok/icon-180.png">'],
     [
       "apple-mobile-web-app-title",
       `<meta name="apple-mobile-web-app-title" content="${escapeHtml(appName)}">`,
-    ],
-    [
-      "apple-mobile-web-app-capable",
-      '<meta name="apple-mobile-web-app-capable" content="yes">',
     ],
     [
       "apple-mobile-web-app-status-bar-style",
