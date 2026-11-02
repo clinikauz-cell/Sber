@@ -117,7 +117,7 @@ export function HomeScreen() {
             <span className="mark">C</span>
             <div className="w-spacer" />
             <div className="bonus-num">{s.hidden ? "•" : s.bonuses}</div>
-            <div className="bonus-name">ВестаБонус</div>
+            <div className="bonus-name">СберБонус</div>
           </button>
         </div>
 
@@ -426,7 +426,7 @@ export function ReceiptScreen() {
       <div className="scroll">
         <div className="pad">
           <div className="block">
-            <div className="muted">АО «Веста» · демо</div>
+            <div className="muted">АО «Сбер» · демо</div>
             <div className="pay-figure" style={{ marginTop: 8 }}>{r ? formatRub(r.amount) : "—"}</div>
             <div className="row"><span>Получатель</span><small>{r?.title}</small></div>
             <div className="row"><span>Комиссия</span><small>{r ? formatRub(r.fee) : "—"}</small></div>
@@ -450,7 +450,7 @@ export function CardScreen() {
         <div className="pad">
           <div className="hero-card">
             <div className="brandline">
-              <span>Веста</span>
+              <span>Сбер</span>
               <span>{s.frozen ? "Заморожена" : "Дебетовая"}</span>
             </div>
             <div>
@@ -497,7 +497,7 @@ export function RequisitesScreen() {
   const rows = [
     ["Получатель", "Клиент Весты"],
     ["Счёт", "40817 810 0 0000 0008423"],
-    ["Банк", "АО «Веста»"],
+    ["Банк", "АО «Сбер»"],
     ["БИК", "044525999"],
     ["ИНН", "7700000099"],
     ["К/с", "30101 810 0 0000 0000999"],
@@ -531,7 +531,7 @@ export function BonusesScreen() {
   const hidden = useBank((s) => s.hidden);
   return (
     <div className="screen">
-      <PageHead title="ВестаБонус" />
+      <PageHead title="СберБонус" />
       <div className="scroll">
         <div className="pad">
           <div className="block" style={{ textAlign: "center", padding: 28 }}>
@@ -566,7 +566,7 @@ export function ProfileScreen() {
         <div className="pad">
           <div className="block">
             <button className="row" onClick={() => s.push({ screen: "chat" })}>
-              ВестаЧат <Ico name="chev" size={18} />
+              СберЧат <Ico name="chev" size={18} />
             </button>
             <button className="row" onClick={() => s.push({ screen: "security" })}>
               Безопасность <Ico name="chev" size={18} />
@@ -582,7 +582,7 @@ export function ProfileScreen() {
             </div>
           </div>
           <p className="fine">
-            Веста — демонстрационный интерфейс. Карты, переводы и бонусы не связаны с реальным банком, деньги не списываются.
+            Сбер — демонстрационный интерфейс. Карты, переводы и бонусы не связаны с реальным банком, деньги не списываются.
           </p>
         </div>
       </div>
@@ -636,7 +636,7 @@ export function ChatScreen() {
   };
   return (
     <div className="screen">
-      <PageHead title="ВестаЧат" />
+      <PageHead title="СберЧат" />
       <div className="scroll">
         <div className="chat-log">
           {chats.map((m) => (
@@ -798,7 +798,7 @@ function PayDock() {
                 </span>
               </button>
               <button className="pay-tile map" onClick={() => s.push({ screen: "market" })}>
-                <span>Веста и партнёры</span>
+                <span>Сбер и партнёры</span>
                 <svg className="pay-map" viewBox="0 0 160 110" aria-hidden="true">
                   <path d="M0 28h160M0 62h160M0 92h160M28 0v110M78 0v110M124 0v110" stroke="#8ea0b0" strokeWidth="6" />
                   <path d="M0 46h160M52 0v110" stroke="#c5d0d8" strokeWidth="3" />
@@ -1198,7 +1198,7 @@ export function LifeScreen() {
             </button>
             <button className="svc" onClick={() => push({ screen: "bonuses" })}>
               <span className="svc-ico"><Mark size={16} /></span>
-              <b>ВестаБонус</b>
+              <b>СберБонус</b>
               <span>Баллы</span>
             </button>
           </div>
