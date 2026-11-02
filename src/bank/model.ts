@@ -266,7 +266,7 @@ const seedChats: ChatMsg[] = [
   {
     id: "hi",
     from: "bot",
-    text: "Я ВестаЧат. Подскажу баланс, бонусы и как перевести — платежи остаются внутри приложения.",
+    text: "Я СберЧат. Подскажу баланс, бонусы и как перевести — платежи остаются внутри приложения.",
   },
 ];
 
@@ -589,7 +589,7 @@ export const useBank = create<BankState>((set, get) => ({
     if (q.includes("баланс") || q.includes("кошел")) {
       answer = `В кошельке ${formatRub(s.wallet)}. На карте •• 2899 — ${formatRub(s.card)}.`;
     } else if (q.includes("бонус")) {
-      answer = `ВестаБонус: ${s.bonuses}. 1 бонус = 1 ₽ при оплате у партнёров.`;
+      answer = `СберБонус: ${s.bonuses}. 1 бонус = 1 ₽ при оплате у партнёров.`;
     } else if (q.includes("перевод") || q.includes("отправ")) {
       answer = "Платежи → Клиенту Весты. Комиссия внутри банка 0 ₽, по СБП — 0,28%.";
     } else if (q.includes("промо") || q.includes("скид")) {
