@@ -27,7 +27,7 @@ export type SheetId = null | "more" | "kind" | "period" | "account" | "contacts"
 
 export type TxIcon = "arrow" | "tbank";
 
-export type Tx = {
+export type Tx = {mini
   id: string;
   group: string;
   title: string;
@@ -86,7 +86,7 @@ export const INITIAL_TXS: Tx[] = [
     id: "said",
     group: "11 сентября, пт",
     title: "Саид Исломбек У.",
-    category: "Клиенту Весты",
+    category: "Клиенту Сбер",
     amount: -3000,
     accountAfter: 59205.9,
     status: "ok",
@@ -143,7 +143,7 @@ export const INITIAL_TXS: Tx[] = [
     id: "aziz",
     group: "28 октября, ср",
     title: "Азизбек Равшанбек Угли А.",
-    category: "Клиенту Весты",
+    category: "Клиенту Сбер",
     amount: -30000,
     fee: 0,
     status: "ok",
@@ -437,7 +437,7 @@ export const useBank = create<BankState>((set, get) => ({
     const fee = feeFor(s.mode, amount);
     if (round2(amount + fee) > s.wallet) return "short";
     const category =
-      s.mode === "sbp" ? "Перевод по СБП" : s.mode === "card" ? "Перевод по номеру карты" : "Клиенту Весты";
+      s.mode === "sbp" ? "Перевод по СБП" : s.mode === "card" ? "Перевод по номеру карты" : "Клиенту Сбер";
     const tx: Tx = {
       id: `t-${Date.now()}`,
       group: "Сегодня",
@@ -591,7 +591,7 @@ export const useBank = create<BankState>((set, get) => ({
     } else if (q.includes("бонус")) {
       answer = `СберБонус: ${s.bonuses}. 1 бонус = 1 ₽ при оплате у партнёров.`;
     } else if (q.includes("перевод") || q.includes("отправ")) {
-      answer = "Платежи → Клиенту Весты. Комиссия внутри банка 0 ₽, по СБП — 0,28%.";
+      answer = "Платежи → Клиенту Сбер. Комиссия внутри банка 0 ₽, по СБП — 0,28%.";
     } else if (q.includes("промо") || q.includes("скид")) {
       answer = "Промокод VESTA300 — скидка 300 ₽ от 800 ₽ на первый заказ в Маркете. Кнопка «Забрать» на главной.";
     } else if (q.includes("карт")) {
