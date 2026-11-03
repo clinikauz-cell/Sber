@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const ACCESS_CODE = "555552";
-const GATE_KEY = "vesta-gate-3";
+const GATE_KEY = "vesta-gate-4";
 const FAIL_KEY = "vesta-gate-fails-3";
 
 const GATE_ON = true;
