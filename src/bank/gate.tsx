@@ -4,7 +4,7 @@ const ACCESS_CODE = "555552";
 const GATE_KEY = "vesta-gate-4";
 const FAIL_KEY = "vesta-gate-fails-3";
 
-const GATE_ON = true;
+const GATE_ON = false;
 
 export function useAccess() {
   const [open, setOpen] = useState(GATE_ON ? false : true);
