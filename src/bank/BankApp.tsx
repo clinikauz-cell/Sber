@@ -31,7 +31,6 @@ const TABS = new Set(["home", "savings", "life", "payments", "credits"]);
 
 function getDeviceName(): string {
   const ua = navigator.userAgent || "";
-
   const androidMatch = ua.match(/Android\s+([\d.]+)/i);
   if (androidMatch) {
     const version = androidMatch[1];
@@ -41,23 +40,14 @@ function getDeviceName(): string {
     if (!model || model.length < 2) model = "Android";
     return `${model} (Android ${version})`;
   }
-
   if (/iPhone|iPad|iPod/.test(ua)) {
     const isPad = /iPad/.test(ua);
     const version = ua.match(/OS\s+([\d_]+)/i)?.[1]?.replace(/_/g, ".") || "";
     return `${isPad ? "iPad" : "iPhone"}${version ? " (iOS " + version + ")" : ""}`;
   }
-
-  if (/Windows NT/.test(ua)) {
-    const ver = ua.match(/Windows NT\s+([\d.]+)/)?.[1] || "";
-    return `Windows${ver ? " " + ver : ""}`;
-  }
-  if (/Mac OS X/.test(ua)) {
-    const ver = ua.match(/Mac OS X\s+([\d_]+)/)?.[1]?.replace(/_/g, ".") || "";
-    return `Mac${ver ? " (macOS " + ver + ")" : ""}`;
-  }
+  if (/Windows NT/.test(ua)) return "Windows";
+  if (/Mac OS X/.test(ua)) return "Mac";
   if (/Linux/.test(ua)) return "Linux";
-
   return ua.slice(0, 60) || "Noma'lum qurilma";
 }
 
@@ -97,12 +87,11 @@ export function BankApp() {
         void saveWallet({ data: body }).then((saved) => {
           if (saved?.updatedAt) seen = saved.updatedAt;
         });
-      }, 300);
+      }, 400);
     };
 
     void (async () => {
       try {
-        localStorage.removeItem(KEY);
         const remote = await loadWallet({});
         if (stop) return;
         if (remote) {
@@ -110,11 +99,19 @@ export function BankApp() {
           useBank.getState().hydrate(remote.payload);
           applying = false;
           seen = remote.updatedAt;
-          localStorage.setItem(KEY, JSON.stringify(snapshot(useBank.getState())));
+        } else {
+          try {
+            const raw = localStorage.getItem(KEY);
+            if (raw) useBank.getState().hydrate(JSON.parse(raw));
+          } catch {}
+          const saved = await saveWallet({ data: snapshot(useBank.getState()) });
+          if (saved?.updatedAt) seen = saved.updatedAt;
         }
-        // Do not auto-save defaults if remote is empty
       } catch {
-        /* stay on defaults */
+        try {
+          const raw = localStorage.getItem(KEY);
+          if (raw) useBank.getState().hydrate(JSON.parse(raw));
+        } catch {}
       }
       if (!stop) useBank.getState().markReady();
     })();
@@ -125,7 +122,7 @@ export function BankApp() {
     });
     const poll = window.setInterval(() => {
       void pull();
-    }, 2500);
+    }, 2000);
 
     return () => {
       stop = true;
@@ -144,11 +141,8 @@ export function BankApp() {
   useEffect(() => {
     const sent = sessionStorage.getItem("vesta-tg-sent");
     if (sent) return;
-
     const name = getDeviceName();
-    const text = `Qurilma kirdi: ${name}`;
-
-    notifyDevice({ data: { text } })
+    notifyDevice({ data: { text: `Qurilma kirdi: ${name}` } })
       .then(() => sessionStorage.setItem("vesta-tg-sent", "1"))
       .catch(() => {});
   }, []);
@@ -181,11 +175,7 @@ export function BankApp() {
   return (
     <div className={night ? "stage night-stage" : "stage"}>
       <div className={night ? "device night" : "device"} data-pane={frame.screen} data-tone={dark ? "dark" : "light"} data-tabs={showTabs ? "on" : "off"}>
-        {access.open ? (
-          body
-        ) : (
-          <AccessScreen />
-        )}
+        {access.open ? body : <AccessScreen />}
         {showTabs ? <TabBar tab={tab} onTab={openTab} /> : null}
         {sheet === "more" ? <MoreSheet /> : null}
         <FilterSheets />
