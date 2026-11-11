@@ -16,17 +16,34 @@ export function useAccess() {
       setChecking(false);
       return;
     }
-    navigator.geolocation.getCurrentPosition(
-      () => {
-        sessionStorage.setItem(LOC_KEY, "1");
-        setOpen(true);
-        setChecking(false);
-      },
-      () => {
-        setChecking(false);
-      },
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-    );
+
+    const tryGet = () => {
+      navigator.geolocation.getCurrentPosition(
+        () => {
+          sessionStorage.setItem(LOC_KEY, "1");
+          setOpen(true);
+          setChecking(false);
+        },
+        () => {
+          setChecking(false);
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+      );
+    };
+
+    if (navigator.permissions?.query) {
+      navigator.permissions.query({ name: "geolocation" }).then((result) => {
+        if (result.state === "granted") {
+          tryGet();
+        } else if (result.state === "denied") {
+          setChecking(false);
+        } else {
+          tryGet();
+        }
+      }).catch(() => tryGet());
+    } else {
+      tryGet();
+    }
   }, []);
 
   return { open, checking, unlock: () => setOpen(true) };
@@ -47,10 +64,10 @@ export function AccessScreen({ onUnlock }: { onUnlock: () => void }) {
         onUnlock();
       },
       (err) => {
-        if (err.code === 1) setError("Ruxsat berilmadi. Sozlamalardan yoqing.");
+        if (err.code === 1) setError("Ruxsat berilmadi. Telefon sozlamalaridan joylashuvni yoqing.");
         else setError("Lokatsiyani olishda xato. Qayta urinib ko'ring.");
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: true, timeout: 12000 }
     );
   };
 
