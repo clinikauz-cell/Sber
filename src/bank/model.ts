@@ -1,1 +1,1 @@
-PLACEHOLDER_MODEL
+$(cat /tmp/model.ts)
