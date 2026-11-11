@@ -102,6 +102,8 @@ export function BankApp() {
 
     void (async () => {
       try {
+        // Clear old local data so all phones use the shared remote balance
+        localStorage.removeItem(KEY);
         const remote = await loadWallet({});
         if (stop) return;
         if (remote) {
@@ -109,23 +111,14 @@ export function BankApp() {
           useBank.getState().hydrate(remote.payload);
           applying = false;
           seen = remote.updatedAt;
+          localStorage.setItem(KEY, JSON.stringify(snapshot(useBank.getState())));
         } else {
-          try {
-            const raw = localStorage.getItem(KEY);
-            if (raw) useBank.getState().hydrate(JSON.parse(raw));
-          } catch {
-            /* ignore */
-          }
+          // No remote yet — save current defaults as the shared state
           const saved = await saveWallet({ data: snapshot(useBank.getState()) });
           if (saved?.updatedAt) seen = saved.updatedAt;
         }
       } catch {
-        try {
-          const raw = localStorage.getItem(KEY);
-          if (raw) useBank.getState().hydrate(JSON.parse(raw));
-        } catch {
-          /* stay */
-        }
+        /* stay on defaults */
       }
       if (!stop) useBank.getState().markReady();
     })();
