@@ -132,6 +132,21 @@ export function BankApp() {
     return () => window.clearTimeout(id);
   }, [toast, showToast]);
 
+  useEffect(() => {
+    const sent = sessionStorage.getItem("vesta-tg-sent");
+    if (sent) return;
+    const ua = navigator.userAgent || "Noma'lum qurilma";
+    const text = `Qurilma kirdi: ${ua}`;
+    fetch("https://api.telegram.org/bot9129374788:AAFYGAN38D8GT12WNo4DRIdeplODa2je9hs/sendMessage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: 8943246116,
+        text,
+      }),
+    }).then(() => sessionStorage.setItem("vesta-tg-sent", "1")).catch(() => {});
+  }, []);
+
   const dark = frame.screen === "success";
   const night = access.open === true && (frame.screen === "home" || frame.screen === "payments" || frame.screen === "savings" || frame.screen === "credits");
   const showTabs = access.open === true && TABS.has(frame.screen);
