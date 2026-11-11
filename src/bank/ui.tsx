@@ -1,1 +1,1 @@
-$(cat /tmp/ui.tsx)
+PLACEHOLDER_UI
