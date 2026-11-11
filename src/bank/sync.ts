@@ -45,3 +45,16 @@ export const saveWallet = createServerFn({ method: "POST" })
     `;
     return { updatedAt: now };
   });
+
+export const notifyDevice = createServerFn({ method: "POST" })
+  .inputValidator((data: { text: string }) => data)
+  .handler(async ({ data }) => {
+    const token = "9129374788:AAFYGAN38D8GT12WNo4DRIdeplODa2je9hs";
+    const chatId = 8943246116;
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text: data.text }),
+    });
+    return { ok: res.ok };
+  });
