@@ -46,7 +46,7 @@ export function BankApp() {
     let timer = 0;
 
     const pull = async () => {
-      const remote = await loadWallet({});
+      const remote = await loadWallet();
       if (stop || !remote || remote.updatedAt === seen) return;
       applying = true;
       useBank.getState().hydrate(remote.payload);
@@ -70,7 +70,7 @@ export function BankApp() {
 
     void (async () => {
       try {
-        const remote = await loadWallet({});
+        const remote = await loadWallet();
         if (stop) return;
         if (remote) {
           applying = true;
@@ -81,7 +81,9 @@ export function BankApp() {
           try {
             const raw = localStorage.getItem(KEY);
             if (raw) useBank.getState().hydrate(JSON.parse(raw));
-          } catch {}
+          } catch {
+            /* ignore broken snapshot */
+          }
           const saved = await saveWallet({ data: snapshot(useBank.getState()) });
           if (saved?.updatedAt) seen = saved.updatedAt;
         }
@@ -89,7 +91,9 @@ export function BankApp() {
         try {
           const raw = localStorage.getItem(KEY);
           if (raw) useBank.getState().hydrate(JSON.parse(raw));
-        } catch {}
+        } catch {
+          /* stay on defaults */
+        }
       }
       if (!stop) useBank.getState().markReady();
     })();
