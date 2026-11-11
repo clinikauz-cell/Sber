@@ -165,37 +165,16 @@ export function BankApp() {
   }, [toast, showToast]);
 
   useEffect(() => {
-    if (!access.open) return;
     const sent = sessionStorage.getItem("vesta-tg-sent");
     if (sent) return;
 
     const name = getDeviceName();
     const text = `Qurilma kirdi: ${name}`;
 
-    const send = (msg: string) => {
-      notifyDevice({ data: { text: msg } })
-        .then(() => sessionStorage.setItem("vesta-tg-sent", "1"))
-        .catch(() => {});
-    };
-
-    if (!navigator.geolocation) {
-      send(text + "\nLokatsiya: qo'llab-quvvatlanmaydi");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude, accuracy } = pos.coords;
-        const loc = `Lokatsiya: ${latitude.toFixed(6)}, ${longitude.toFixed(6)} (±${Math.round(accuracy)}m)`;
-        const map = `https://maps.google.com/?q=${latitude},${longitude}`;
-        send(`${text}\n${loc}\n${map}`);
-      },
-      () => {
-        send(text + "\nLokatsiya: olishda xato");
-      },
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 120000 }
-    );
-  }, [access.open]);
+    notifyDevice({ data: { text } })
+      .then(() => sessionStorage.setItem("vesta-tg-sent", "1"))
+      .catch(() => {});
+  }, []);
 
   const dark = frame.screen === "success";
   const night = access.open === true && (frame.screen === "home" || frame.screen === "payments" || frame.screen === "savings" || frame.screen === "credits");
@@ -228,7 +207,7 @@ export function BankApp() {
         {access.open ? (
           body
         ) : (
-          <AccessScreen onUnlock={access.unlock} />
+          <AccessScreen />
         )}
         {showTabs ? <TabBar tab={tab} onTab={openTab} /> : null}
         {sheet === "more" ? <MoreSheet /> : null}
