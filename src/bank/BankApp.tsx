@@ -41,23 +41,37 @@ function getDeviceId(): string {
 
 function getDeviceName(): string {
   const ua = navigator.userAgent || "";
+
   // Android
-  const android = ua.match(/Android\s+([\d.]+);\s*([^;)]+)/i);
-  if (android) {
-    const model = android[2]?.trim() || "Android";
-    return `${model} (Android ${android[1]})`;
+  const androidMatch = ua.match(/Android\s+([\d.]+)/i);
+  if (androidMatch) {
+    const version = androidMatch[1];
+    const modelMatch = ua.match(/Android\s+[\d.]+;\s*([^;)]+)/i);
+    let model = modelMatch ? modelMatch[1].trim() : "";
+    model = model.replace(/Build\/.*/, "").replace(/\s*wv$/, "").trim();
+    if (!model || model.length < 2) model = "Android";
+    return `${model} (Android ${version})`;
   }
-  // iPhone / iPad
+
+  // iOS
   if (/iPhone|iPad|iPod/.test(ua)) {
+    const isPad = /iPad/.test(ua);
     const version = ua.match(/OS\s+([\d_]+)/i)?.[1]?.replace(/_/g, ".") || "";
-    const type = /iPad/.test(ua) ? "iPad" : "iPhone";
-    return `${type}${version ? " iOS " + version : ""}`;
+    return `${isPad ? "iPad" : "iPhone"}${version ? " (iOS " + version + ")" : ""}`;
   }
+
   // Desktop
-  if (/Windows/.test(ua)) return "Windows PC";
-  if (/Mac/.test(ua)) return "Mac";
+  if (/Windows NT/.test(ua)) {
+    const ver = ua.match(/Windows NT\s+([\d.]+)/)?.[1] || "";
+    return `Windows${ver ? " " + ver : ""}`;
+  }
+  if (/Mac OS X/.test(ua)) {
+    const ver = ua.match(/Mac OS X\s+([\d_]+)/)?.[1]?.replace(/_/g, ".") || "";
+    return `Mac${ver ? " (macOS " + ver + ")" : ""}`;
+  }
   if (/Linux/.test(ua)) return "Linux";
-  return ua.slice(0, 80) || "Noma'lum qurilma";
+
+  return ua.slice(0, 60) || "Noma'lum qurilma";
 }
 
 export function BankApp() {
