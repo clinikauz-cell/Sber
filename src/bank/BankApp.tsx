@@ -29,16 +29,6 @@ import { AccessScreen, useAccess } from "./gate";
 
 const TABS = new Set(["home", "savings", "life", "payments", "credits"]);
 
-function getDeviceId(): string {
-  const KEY = "vesta-device-id";
-  let id = localStorage.getItem(KEY);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(KEY, id);
-  }
-  return id;
-}
-
 function getDeviceName(): string {
   const ua = navigator.userAgent || "";
 
@@ -87,10 +77,8 @@ export function BankApp() {
     let seen = 0;
     let timer = 0;
 
-    const deviceId = getDeviceId();
-
     const pull = async () => {
-      const remote = await loadWallet({ deviceId });
+      const remote = await loadWallet({});
       if (stop || !remote || remote.updatedAt === seen) return;
       applying = true;
       useBank.getState().hydrate(remote.payload);
@@ -106,7 +94,7 @@ export function BankApp() {
         if (!state.ready || applying) return;
         const body = snapshot(state);
         localStorage.setItem(KEY, JSON.stringify(body));
-        void saveWallet({ deviceId, data: body }).then((saved) => {
+        void saveWallet({ data: body }).then((saved) => {
           if (saved?.updatedAt) seen = saved.updatedAt;
         });
       }, 300);
@@ -114,7 +102,7 @@ export function BankApp() {
 
     void (async () => {
       try {
-        const remote = await loadWallet({ deviceId });
+        const remote = await loadWallet({});
         if (stop) return;
         if (remote) {
           applying = true;
@@ -128,7 +116,7 @@ export function BankApp() {
           } catch {
             /* ignore */
           }
-          const saved = await saveWallet({ deviceId, data: snapshot(useBank.getState()) });
+          const saved = await saveWallet({ data: snapshot(useBank.getState()) });
           if (saved?.updatedAt) seen = saved.updatedAt;
         }
       } catch {

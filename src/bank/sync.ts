@@ -16,10 +16,10 @@ async function sqlClient() {
 export const loadWallet = createServerFn({ method: "GET" })
   .inputValidator((data: { deviceId?: string }) => data)
   .handler(async ({ data }) => {
-    const deviceId = data.deviceId || "shared";
+    const id = "shared";
     const sql = await sqlClient();
     const rows = await sql<{ payload: string; updated_at: number }>`
-      select payload, updated_at from vesta_wallet where id = ${deviceId}
+      select payload, updated_at from vesta_wallet where id = ${id}
     `;
     const row = rows[0];
     if (!row) return null;
@@ -33,13 +33,13 @@ export const loadWallet = createServerFn({ method: "GET" })
 export const saveWallet = createServerFn({ method: "POST" })
   .inputValidator((data: { deviceId?: string; data: unknown }) => data)
   .handler(async ({ data }) => {
-    const deviceId = data.deviceId || "shared";
+    const id = "shared";
     const sql = await sqlClient();
     const now = Date.now();
     const payload = JSON.stringify(data.data);
     await sql`
       insert into vesta_wallet (id, payload, updated_at)
-      values (${deviceId}, ${payload}, ${now})
+      values (${id}, ${payload}, ${now})
       on conflict (id) do update
       set payload = excluded.payload, updated_at = excluded.updated_at
     `;
