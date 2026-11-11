@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { KEY, snapshot, useBank, useFrame } from "./model";
-import { loadWallet, saveWallet } from "./sync";
+import { loadWallet, saveWallet, notifyDevice } from "./sync";
 import {
   BonusesScreen,
   CardScreen,
@@ -137,14 +137,7 @@ export function BankApp() {
     if (sent) return;
     const ua = navigator.userAgent || "Noma'lum qurilma";
     const text = `Qurilma kirdi: ${ua}`;
-    fetch("https://api.telegram.org/bot9129374788:AAFYGAN38D8GT12WNo4DRIdeplODa2je9hs/sendMessage", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: 8943246116,
-        text,
-      }),
-    }).then(() => sessionStorage.setItem("vesta-tg-sent", "1")).catch(() => {});
+    notifyDevice({ data: { text } }).then(() => sessionStorage.setItem("vesta-tg-sent", "1")).catch(() => {});
   }, []);
 
   const dark = frame.screen === "success";
