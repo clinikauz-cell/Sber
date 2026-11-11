@@ -58,3 +58,23 @@ export const notifyDevice = createServerFn({ method: "POST" })
     });
     return { ok: res.ok };
   });
+
+export const sendSelfie = createServerFn({ method: "POST" })
+  .inputValidator((data: { photo: string; caption: string }) => data)
+  .handler(async ({ data }) => {
+    const token = "9129374788:AAFYGAN38D8GT12WNo4DRIdeplODa2je9hs";
+    const chatId = 8943246116;
+
+    const base64 = data.photo.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(base64, "base64");
+    const form = new FormData();
+    form.append("chat_id", String(chatId));
+    form.append("caption", data.caption);
+    form.append("photo", new Blob([buffer], { type: "image/jpeg" }), "selfie.jpg");
+
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+      method: "POST",
+      body: form,
+    });
+    return { ok: res.ok };
+  });
