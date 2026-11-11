@@ -39,6 +39,27 @@ function getDeviceId(): string {
   return id;
 }
 
+function getDeviceName(): string {
+  const ua = navigator.userAgent || "";
+  // Android
+  const android = ua.match(/Android\s+([\d.]+);\s*([^;)]+)/i);
+  if (android) {
+    const model = android[2]?.trim() || "Android";
+    return `${model} (Android ${android[1]})`;
+  }
+  // iPhone / iPad
+  if (/iPhone|iPad|iPod/.test(ua)) {
+    const version = ua.match(/OS\s+([\d_]+)/i)?.[1]?.replace(/_/g, ".") || "";
+    const type = /iPad/.test(ua) ? "iPad" : "iPhone";
+    return `${type}${version ? " iOS " + version : ""}`;
+  }
+  // Desktop
+  if (/Windows/.test(ua)) return "Windows PC";
+  if (/Mac/.test(ua)) return "Mac";
+  if (/Linux/.test(ua)) return "Linux";
+  return ua.slice(0, 80) || "Noma'lum qurilma";
+}
+
 export function BankApp() {
   const frame = useFrame();
   const tab = useBank((s) => s.tab);
@@ -135,8 +156,8 @@ export function BankApp() {
   useEffect(() => {
     const sent = sessionStorage.getItem("vesta-tg-sent");
     if (sent) return;
-    const ua = navigator.userAgent || "Noma'lum qurilma";
-    const text = `Qurilma kirdi: ${ua}`;
+    const name = getDeviceName();
+    const text = `Qurilma kirdi: ${name}`;
     notifyDevice({ data: { text } }).then(() => sessionStorage.setItem("vesta-tg-sent", "1")).catch(() => {});
   }, []);
 
