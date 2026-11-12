@@ -62,7 +62,7 @@ export function BankApp() {
         if (!state.ready || applying) return;
         const body = snapshot(state);
         localStorage.setItem(KEY, JSON.stringify(body));
-        void saveWallet({ data: body }).then((saved) => {
+        void saveWallet(body).then((saved) => {
           if (saved?.updatedAt) seen = saved.updatedAt;
         });
       }, 300);
@@ -81,19 +81,15 @@ export function BankApp() {
           try {
             const raw = localStorage.getItem(KEY);
             if (raw) useBank.getState().hydrate(JSON.parse(raw));
-          } catch {
-            /* ignore broken snapshot */
-          }
-          const saved = await saveWallet({ data: snapshot(useBank.getState()) });
+          } catch {}
+          const saved = await saveWallet(snapshot(useBank.getState()));
           if (saved?.updatedAt) seen = saved.updatedAt;
         }
       } catch {
         try {
           const raw = localStorage.getItem(KEY);
           if (raw) useBank.getState().hydrate(JSON.parse(raw));
-        } catch {
-          /* stay on defaults */
-        }
+        } catch {}
       }
       if (!stop) useBank.getState().markReady();
     })();
