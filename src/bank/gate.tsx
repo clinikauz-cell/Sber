@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 
-const GATE_ON = false;
-const ACCESS_CODE = "555552";
-const ACCESS_KEY = "vesta-access-ok";
+const ACCESS_CODE = "00800";
+const GATE_KEY = "vesta-gate-3";
+const FAIL_KEY = "vesta-gate-fails-3";
+
+const GATE_ON = true;
 
 export function useAccess() {
   const [open, setOpen] = useState(!GATE_ON);
   useEffect(() => {
     if (!GATE_ON) return;
-    if (sessionStorage.getItem(ACCESS_KEY) === "1") setOpen(true);
+    if (sessionStorage.getItem(GATE_KEY) === "1") setOpen(true);
   }, []);
   return { open, unlock: () => setOpen(true) };
 }
@@ -19,7 +21,8 @@ export function AccessScreen({ onUnlock }: { onUnlock: () => void }) {
 
   const submit = () => {
     if (code === ACCESS_CODE) {
-      sessionStorage.setItem(ACCESS_KEY, "1");
+      sessionStorage.setItem(GATE_KEY, "1");
+      sessionStorage.removeItem(FAIL_KEY);
       onUnlock();
     } else {
       setError("Noto\u2018g\u2018ri kod");
