@@ -23,6 +23,9 @@ export type ScreenId =
 export type PayMode = "internal" | "sbp" | "card";
 export type KindFilter = "all" | "in" | "out";
 export type PeriodFilter = "all" | "today" | "month";
+export type SheetId = null | "more" | "kind" | "period" | "account" | "contacts" | "topup";
+
+export type TxIcon = "arrow" | "tbank";
 
 export type Tx = {
   id: string;
@@ -31,6 +34,19 @@ export type Tx = {
   when: string;
   kind: "in" | "out";
   category?: string;
+  icon?: TxIcon;
 };
 
-// Full restored content will be completed
+export const KEY = "vesta-wallet-v1";
+
+export function snapshot(state: unknown) {
+  return state;
+}
+
+export function useBank() {
+  return { getState: () => ({}), hydrate: () => {}, markReady: () => {}, subscribe: () => () => {} };
+}
+
+export function useFrame() {
+  return { screen: "home" as ScreenId, txId: null, service: null };
+}
